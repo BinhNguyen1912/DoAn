@@ -1,0 +1,25 @@
+{
+  "name": "safe-zone-monitor",
+  "private": true,
+  "description": "Safe Zone Monitor: Edge AI danger-zone alerts (monorepo for TypeScript apps)",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "workspaces": [
+    "apps/backend",
+    "apps/web",
+    "packages/*"
+  ],
+  "scripts": {
+    "backend:dev": "npm run start:dev -w apps/backend",
+    "backend:build": "npm run build -w apps/backend",
+    "backend:test": "npm run test -w apps/backend",
+    "backend:lint": "npm run lint -w apps/backend",
+    "api:generate": "npm run openapi:generate -w apps/backend && npm run generate -w packages/api-types",
+    "api:check": "node scripts/check-contract.mjs",
+    "web:dev": "npm run dev -w apps/web",
+    "web:build": "npm run build -w apps/web",
+    "web:test": "npm run test -w apps/web",
+    "web:lint": "npm run lint -w apps/web"
+  }
+}
