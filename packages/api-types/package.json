@@ -1,0 +1,15 @@
+{
+  "name": "@safe-zone/api-types",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "TypeScript types generated from docs/openapi.json. Do not edit src/schema.d.ts by hand.",
+  "types": "./src/index.d.ts",
+  "exports": { ".": { "types": "./src/index.d.ts" } },
+  "scripts": {
+    "generate": "openapi-typescript ../../docs/openapi.json -o src/schema.d.ts"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.0.0"
+  }
+}

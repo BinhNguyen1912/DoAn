@@ -1,0 +1,489 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/zones": {
+      "get": {
+        "operationId": "ZonesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ZoneResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "zones"
+        ]
+      }
+    },
+    "/api/zones/{id}": {
+      "get": {
+        "operationId": "ZonesController_get",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ZoneResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "zones"
+        ]
+      },
+      "put": {
+        "operationId": "ZonesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateZoneDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ZoneResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "zones"
+        ]
+      }
+    },
+    "/api/devices": {
+      "get": {
+        "operationId": "DevicesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeviceResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "devices"
+        ]
+      }
+    },
+    "/api/devices/{id}/heartbeat": {
+      "post": {
+        "operationId": "DevicesController_heartbeat",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Called by the ESP32 on a timer; proves the speaker is alive.",
+        "tags": [
+          "devices"
+        ]
+      }
+    },
+    "/api/events": {
+      "post": {
+        "operationId": "EventsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Duplicate eventId; stored event returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventResponseDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Event stored",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Edge AI posts each confirmed intrusion here. 201 when new, 200 when the eventId was already stored.",
+        "tags": [
+          "events"
+        ]
+      },
+      "get": {
+        "operationId": "EventsController_list",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 200,
+              "default": 50,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "default": 0,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "events"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Safe Zone Monitor API",
+    "description": "",
+    "version": "0.1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "ZonePointDto": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Fraction of image width"
+          },
+          "y": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Fraction of image height"
+          }
+        },
+        "required": [
+          "x",
+          "y"
+        ]
+      },
+      "ZoneResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ZonePointDto"
+            }
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "points",
+          "updatedAt"
+        ]
+      },
+      "UpdateZoneDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "points": {
+            "minItems": 3,
+            "maxItems": 64,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ZonePointDto"
+            }
+          }
+        },
+        "required": [
+          "points"
+        ]
+      },
+      "DeviceResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "online",
+              "offline"
+            ],
+            "type": "string"
+          },
+          "lastSeenAt": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "status",
+          "lastSeenAt"
+        ]
+      },
+      "CreateEventDto": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Idempotency key generated by Edge AI"
+          },
+          "zoneId": {
+            "type": "number",
+            "minimum": 1,
+            "example": 1
+          },
+          "detectedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When Edge AI confirmed the intrusion"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "eventId",
+          "zoneId",
+          "detectedAt",
+          "confidence"
+        ]
+      },
+      "AlertAttemptResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "deviceId": {
+            "type": "number"
+          },
+          "status": {
+            "enum": [
+              "sent",
+              "received",
+              "playing",
+              "done",
+              "failed"
+            ],
+            "type": "string"
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "deviceId",
+          "status",
+          "error",
+          "updatedAt"
+        ]
+      },
+      "EventResponseDto": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "zoneId": {
+            "type": "number"
+          },
+          "detectedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "confidence": {
+            "type": "number"
+          },
+          "receivedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "evidencePath": {
+            "type": "string",
+            "nullable": true
+          },
+          "alertAttempts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlertAttemptResponseDto"
+            }
+          }
+        },
+        "required": [
+          "eventId",
+          "zoneId",
+          "detectedAt",
+          "confidence",
+          "receivedAt",
+          "evidencePath",
+          "alertAttempts"
+        ]
+      },
+      "EventListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EventResponseDto"
+            }
+          },
+          "total": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ]
+      }
+    }
+  }
+}

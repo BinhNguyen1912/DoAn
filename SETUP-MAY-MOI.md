@@ -22,7 +22,8 @@ Thư mục này **chưa phải git repo** tại thời điểm viết (10/10/202
 | --- | --- | --- |
 | `.pi/` (cài package skill) | Nằm trong `.gitignore` | Chạy lệnh ở mục 3 |
 | `.pi/agents/` (7 vai trò) | Cùng lý do | Chép từ máy cũ, hoặc chạy `/setup-pi-myself` trong pi |
-| `.env` | Chứa cấu hình riêng | Copy `.env.example` thành `.env`, điền lại giá trị |
+| `.env` (gốc, `apps/backend`, `apps/web`, `apps/edge-ai`) | Chứa cấu hình và bí mật | Chạy `node scripts/init-env.mjs` (tạo mọi `.env` thiếu, sinh token ngẫu nhiên, không ghi đè file có sẵn) |
+| `iot/esp32-alert/secrets.h` | Chứa mật khẩu Wi-Fi và token | Copy `secrets.h.example`, điền tay; `DEVICE_API_TOKEN` lấy từ `apps/backend/.env` |
 | Model `.pt` / `.onnx` | Quá nặng, bị ignore | Tải lại `yolo26n.pt` vào `apps/edge-ai/models/` |
 | `docs/05 Mau*.docx` (mẫu của trường) và `docs/Nhat-ky-do-an-*.docx` | Chứa thông tin cá nhân; repo public nên bị ignore | Chép tay từ máy cũ hoặc xin lại file mẫu của trường |
 | Clip và nhãn trong `evaluation/` | Có hình người, bị ignore | Chép tay từ máy cũ nếu cần |
@@ -42,11 +43,18 @@ pi install -l git:github.com/MinhDuyDEV/pi-myself
 - [ ] Đăng nhập/cấu hình nhà cung cấp model cho pi trên máy mới
 - [ ] Nếu cần tracker/triage: chạy `/skill:setup-matt-pocock-skills` (tạo `docs/agents/*`)
 
+## 3b. Máy Windows
+
+- Cài Git for Windows (pi cần Git Bash), Node 24, Docker Desktop (WSL2), `uv`.
+- Script của dự án viết bằng Node/Python nên chạy được trên Windows; `.gitattributes` ép LF.
+- Cấu hình máy Windows chưa biết (CPU, RAM, GPU). Có GPU NVIDIA thì cài PyTorch bản CUDA; đo lại FPS trên máy đó.
+- Token của `apps/edge-ai/.env` và `apps/backend/.env` phải giống nhau; nếu tạo `.env` riêng trên hai máy, chép lại `EDGE_API_TOKEN`.
+
 ## 4. Công cụ theo từng tuần
 
 Chỉ cài khi đến tuần cần dùng.
 
-- [ ] **Tuần 1 – Edge AI:** Python, `python -m venv .venv`, `pip install -r apps/edge-ai/requirements.txt` (cần bổ sung `ultralytics`, `opencv-python`, `numpy`, `httpx` vào file này khi bắt đầu viết mã)
+- [ ] **Tuần 1 – Edge AI:** cài `uv`, rồi `cd apps/edge-ai && uv sync` (Python 3.12 do `uv` tự tải; `.venv` khoảng 1 GB vì PyTorch)
 - [ ] Cho phép terminal/IDE truy cập webcam (macOS: Cài đặt → Quyền riêng tư → Camera); kiểm tra chỉ số webcam 0 hay 1
 - [ ] **Tuần 2 – ESP32:** Arduino IDE hoặc PlatformIO, gói Arduino-ESP32, driver USB CH340 cho ESP32 DevKit V1, plugin tải dữ liệu LittleFS
 - [ ] **Tuần 4 – Backend:** Node LTS (chọn bản vừa Nest CLI vừa Vite), PostgreSQL, `npm install` trong `apps/backend`

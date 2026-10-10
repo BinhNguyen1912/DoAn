@@ -26,3 +26,12 @@ evaluation/labels/*
 # Mau theo doi cua truong: chua thong tin ca nhan, chi giu o may cuc bo
 docs/05 Mau*.docx
 docs/Nhat-ky-do-an-*.docx
+
+# Node / build
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Firmware secrets
+**/secrets.h
