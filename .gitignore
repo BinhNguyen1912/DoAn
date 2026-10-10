@@ -1,0 +1,28 @@
+# Local environments and generated output
+.venv/
+**/.venv/
+**/node_modules/
+**/dist/
+**/build/
+**/__pycache__/
+**/.pytest_cache/
+**/.DS_Store
+
+# Secrets and private evaluation media
+.env
+**/.env
+!**/.env.example
+apps/edge-ai/models/*.pt
+apps/edge-ai/models/*.onnx
+evaluation/clips/*
+evaluation/labels/*
+!evaluation/clips/.gitkeep
+!evaluation/labels/.gitkeep
+
+# pi local state
+.pi/
+.pi-subagents/
+
+# Mau theo doi cua truong: chua thong tin ca nhan, chi giu o may cuc bo
+docs/05 Mau*.docx
+docs/Nhat-ky-do-an-*.docx
