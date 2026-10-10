@@ -73,7 +73,8 @@ Rủi ro lớn nhất là tuần 5 (nối bốn thành phần). Nên nối thô 
 
 ## 6. Trạng thái hiện tại
 
-- Mới có khung thư mục và tài liệu; **chưa có ứng dụng, firmware hay lệnh build/test nào chạy được**. Đừng giả định lệnh tồn tại.
+- Đã có: gốc npm workspaces, backend NestJS 12 (ESM, Vitest, oxlint) với module cấu hình kiểm tra bằng Zod, `compose.yaml` Postgres 18 (dev: `127.0.0.1:55432`), project `uv` cho edge-ai (Python 3.12) với `config.py`. Chưa có: entity/migration, API, web, firmware, CI.
+- Lệnh: `npm run backend:dev|build|test|lint` (gốc repo); `docker compose up -d db`; `cd apps/edge-ai && uv run pytest`; `node scripts/init-env.mjs`.
 - Tại thời điểm viết (10/10/2026) chưa có tuần nào trong `tasks/` được tick. Cập nhật mục này khi tiến độ thay đổi.
 - Chưa xác minh: cấu hình CPU/GPU và dung lượng trống của laptop; chân I2S, flash, đầu nối loa trên bo mạch thật; FPS thực của model.
 - `docs/api-contract.md` mới là đề xuất, cần viết đầy đủ ở tuần 4 trước khi tích hợp.
@@ -98,7 +99,7 @@ Môi trường không có `python-docx` hay `pandoc`; sửa trực tiếp `word/
 - Không sửa `iot/xiaozhi-source/`.
 - AI chạy cục bộ; không gửi khung hình lên cloud.
 - Không commit: `.env`, model `.pt`/`.onnx`, clip và nhãn trong `evaluation/`. Chỉ `.env.example` được commit.
-- Cấu hình qua biến môi trường (`API_BASE_URL`, `ESP32_BASE_URL`, `DATABASE_URL`, `CAMERA_INDEX`, `MODEL_PATH`); không hard-code IP, mật khẩu.
+- Cấu hình qua biến môi trường, không hard-code IP, mật khẩu. Mỗi app có `.env.example` (commit) và `.env` (ignore); chạy `node scripts/init-env.mjs` để tạo. Thêm biến mới: sửa schema (`apps/backend/src/config/env.schema.ts`, `apps/edge-ai/src/config.py`) và `.env.example` cùng lúc; app dừng khi cấu hình sai. Firmware dùng `secrets.h` (ignore).
 - Không bịa số liệu hiệu năng; ngưỡng, FPS, độ trễ, bỏ sót/báo nhầm phải đo trên laptop thật và ghi vào `evaluation/`.
 - Token thiết bị và API chỉ dùng trong LAN thử nghiệm.
 
@@ -109,6 +110,17 @@ Môi trường không có `python-docx` hay `pandoc`; sửa trực tiếp `word/
 - Đổi payload hoặc route phải cập nhật `docs/api-contract.md` cùng lúc và nêu thành phần bị ảnh hưởng (edge-ai, backend, web, ESP32).
 - Khi khởi tạo một app: cập nhật README của app, bảng trạng thái trong `README.md` gốc, mục 6 của file này, và thêm lệnh build/test vào đây.
 - Commit theo conventional commits có scope (`edge-ai`, `backend`, `web`, `esp32`, `docs`). Chỉ commit/push khi người dùng yêu cầu.
+
+## 9b. Quy tắc commit và push
+
+Remote: `origin` = `https://github.com/BinhNguyen1912/DoAn.git`, nhánh `main`, repo **public**.
+
+**Quy tắc chi tiết (nhánh, PR, kiểm tra trước khi push, đặt tên commit, review) chưa được thiết lập; người dùng sẽ tự thiết lập sau.** Khi người dùng cung cấp, ghi vào mục này và bỏ dòng này.
+
+Trong lúc chờ:
+- Không commit hay push khi người dùng chưa yêu cầu rõ trong lượt đó.
+- Không đẩy `.env`, model, clip hay file chứa thông tin cá nhân (xem `.gitignore`). Repo public nên kiểm tra `git status` trước khi push.
+- Không force-push, không đổi lịch sử `main`, không đổi chế độ public/private của repo.
 
 ## 10. Thiết lập trên máy mới
 
