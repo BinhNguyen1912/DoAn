@@ -27,7 +27,7 @@ class Settings(BaseSettings):
 
     # Camera and model
     camera_index: int = Field(default=0, ge=0)
-    model_path: Path = Path("models/yolo26n.pt")
+    model_path: Path = Path("models/yolo11n.pt")
     detect_confidence: float = Field(default=0.35, gt=0, le=1)
     image_size: int = Field(default=640, ge=32)
 
