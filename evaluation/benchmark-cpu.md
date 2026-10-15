@@ -1,4 +1,20 @@
-# Đo FPS suy luận trên CPU — lần đo đầu (tuần 1, chưa hoàn chỉnh)
+# Số đo FPS suy luận trên CPU — máy MSI Modern 14
+
+## Đo với webcam thật — lần 2 (14/10/2026, sau khi dựng venv Windows)
+
+**Nguồn:** webcam index 0, OpenCV báo `640x480 @ 30 FPS` (chưa chắc là chế độ cao nhất của camera).
+**Model:** `yolo11n.pt`, `classes=0`, `imgsz=640`, `device=cpu`, qua `yolo predict ... show=True`.
+**Kết quả:** inference ổn định **46–53 ms/khung ≈ 20 FPS** — khớp lần đo trên ảnh giả (46 ms).
+**Kết luận:** máy đủ chạy realtime trên CPU; không cần GPU hay ONNX.
+
+**Quan sát chất lượng:**
+- Người thật bị nhận diện tốt.
+- **Báo nhầm:** ly nước bị gán nhãn `person` ở ngưỡng mặc định (conf ≥ 0.25) — chưa ghi được confidence cụ thể của vật báo nhầm; cần thử lại với `conf=0.5`/`0.6` và đo lại xem người thật còn giữ được không. Giá trị `conf=0.35` trong phương án là ước lượng ban đầu, chưa kiểm chứng.
+- Camera mặc định lấy 640x480, không phải 1080p — cần kiểm tra các resolution camera hỗ trợ thật khi viết `camera.py`.
+
+**Cần làm tiếp để tuần 1 chốt:** đo 416/320, độ trễ đầu-cuối, chốt ngưỡng conf, chốt vị trí camera + vùng.
+
+## Đo suy luận CPU trên ảnh giả — lần 1 (tuần 1, chưa hoàn chỉnh)
 
 **Máy:** MSI Modern 14 — Intel i7-1195G7 @ 2.90 GHz, 8 nhân (WSL2, Ubuntu), RAM 16 GB.
 **Model:** `yolo11n.pt` (bản sẵn có, 6.4 MB), chỉ lớp `person` (`classes=0`), `conf=0.35`, `device=cpu`.
