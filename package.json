@@ -11,6 +11,7 @@
     "packages/*"
   ],
   "scripts": {
+    "dev": "node scripts/dev.mjs",
     "backend:dev": "npm run start:dev -w apps/backend",
     "backend:build": "npm run build -w apps/backend",
     "backend:test": "npm run test -w apps/backend",
@@ -20,6 +21,11 @@
     "web:dev": "npm run dev -w apps/web",
     "web:build": "npm run build -w apps/web",
     "web:test": "npm run test -w apps/web",
-    "web:lint": "npm run lint -w apps/web"
+    "web:lint": "npm run lint -w apps/web",
+    "cam": "uv run --directory apps/edge-ai yolo predict model=models/yolo11n.pt source=0 classes=0 conf=0.5 device=cpu imgsz=640 show=True",
+    "cam:save": "uv run --directory apps/edge-ai yolo predict model=models/yolo11n.pt source=0 classes=0 conf=0.5 device=cpu imgsz=640 show=True save=True",
+    "cam:probe": "uv run --directory apps/edge-ai python src/probe_cameras.py",
+    "edge:fake": "uv run --directory apps/edge-ai python -m src.send_event",
+    "edge:run": "uv run --directory apps/edge-ai python -m src.main"
   }
 }
